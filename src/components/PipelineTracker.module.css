@@ -1,0 +1,149 @@
+.tracker {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  animation: fadeIn 0.4s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.trackerHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-blue);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+
+.headerIcon {
+  animation: spin 1.5s linear infinite;
+  filter: drop-shadow(0 0 5px rgba(0, 240, 255, 0.5));
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.pipeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.step {
+  display: flex;
+  gap: 14px;
+  align-items: stretch;
+  min-height: 36px;
+}
+
+.stepConnector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.iconCircle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.line {
+  width: 2px;
+  flex: 1;
+  min-height: 10px;
+  background-color: rgba(255, 255, 255, 0.05);
+  transition: background-color 0.3s ease;
+}
+
+/* Status: done */
+.done .iconCircle {
+  background: var(--primary-gradient);
+  color: white;
+  box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+}
+
+.done .line {
+  background: var(--primary-gradient);
+}
+
+.done .stepLabel {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Status: active */
+.active .iconCircle {
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--primary-blue);
+  border: 1px solid var(--primary-blue);
+  box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.1);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.1); }
+  50%      { box-shadow: 0 0 0 8px rgba(0, 240, 255, 0.2); }
+}
+
+.active .stepLabel {
+  color: var(--primary-blue);
+  font-weight: 600;
+}
+
+/* Status: pending */
+.pending .iconCircle {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+}
+
+.pending .stepLabel {
+  color: var(--text-muted);
+}
+
+.stepContent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  flex: 1;
+}
+
+.stepLabel {
+  font-size: 14px;
+  transition: color 0.3s ease, font-weight 0.3s ease;
+}
+
+.stepTime {
+  font-size: 11px;
+  color: var(--text-muted);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}

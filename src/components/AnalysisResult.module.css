@@ -1,0 +1,266 @@
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: resultFadeIn 0.4s ease;
+}
+
+@keyframes resultFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Narrative / markdown */
+.narrative {
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.narrative h1,
+.narrative h2,
+.narrative h3 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.narrative h1 { font-size: 18px; }
+.narrative h2 { font-size: 16px; }
+.narrative h3 { font-size: 14px; }
+
+.narrative p {
+  margin-bottom: 10px;
+}
+
+.narrative ul,
+.narrative ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.narrative li {
+  margin-bottom: 4px;
+}
+
+.narrative strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.narrative code {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.narrative pre {
+  background-color: #1e1b2e;
+  color: #e2e0f0;
+  padding: 14px 16px;
+  border-radius: 10px;
+  overflow-x: auto;
+  margin: 10px 0;
+}
+
+.narrative pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.narrative table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 13px;
+  background: rgba(12, 14, 20, 0.6);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.narrative th,
+.narrative td {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  text-align: left;
+  color: var(--text-primary);
+}
+
+.narrative th {
+  background-color: rgba(255, 255, 255, 0.05);
+  font-weight: 600;
+}
+
+.narrative tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Section containers */
+.section {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.count {
+  background-color: rgba(138, 43, 226, 0.2);
+  color: #d8b4fe;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* Causes */
+.causesList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.causeCard {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 0.2s ease;
+}
+
+.causeCard:hover {
+  border-color: #c4b5fd;
+}
+
+.causeRank {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.causeContent {
+  flex: 1;
+}
+
+.causeName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.causeDesc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.causeConfidence {
+  font-size: 11px;
+  color: var(--primary-purple);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* Evidence */
+.evidenceList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.evidenceCard {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.evidenceIcon {
+  color: var(--primary-purple);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.evidenceContent {
+  flex: 1;
+}
+
+.evidenceText {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.evidenceSource {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* Recommendations */
+.recList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recCard {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.recIcon {
+  color: #f59e0b;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.recText {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* Pass info */
+.passInfo {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  padding-top: 8px;
+  font-style: italic;
+}
