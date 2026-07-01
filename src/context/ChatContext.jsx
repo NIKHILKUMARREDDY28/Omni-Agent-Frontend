@@ -65,7 +65,7 @@ export function ChatProvider({ children }) {
   const [error, setError] = useState(null);
 
   // Backend health
-  const [backendStatus, setBackendStatus] = useState({ ok: false, version: '' });
+  const [backendStatus, setBackendStatus] = useState({ ok: false, version: '', checked: false });
 
   // Uploaded datasets
   const [uploadedDatasets, setUploadedDatasets] = useState([]);
@@ -140,12 +140,18 @@ export function ChatProvider({ children }) {
     saveToStorage(LS_INGESTED_SCHEMAS_KEY, ingestedSchemas);
   }, [ingestedSchemas]);
 
-  // Check backend health on mount
+  // Check backend health on mount, then poll periodically
+  const checkBackend = useCallback(async () => {
+    const status = await checkHealth();
+    setBackendStatus({ ...status, checked: true });
+    return status;
+  }, []);
+
   useEffect(() => {
     let mounted = true;
     const check = async () => {
       const status = await checkHealth();
-      if (mounted) setBackendStatus(status);
+      if (mounted) setBackendStatus({ ...status, checked: true });
     };
     check();
     const interval = setInterval(check, 30000);
@@ -387,8 +393,13 @@ export function ChatProvider({ children }) {
       });
       setIsLoading(false);
       setCurrentNode(null);
+      // A fetch-level failure (e.g. TypeError: Failed to fetch) means the backend
+      // is unreachable — re-check immediately instead of waiting for the next poll.
+      if (err instanceof TypeError) {
+        checkBackend();
+      }
     }
-  }, [ensureConversation, isLoading]);
+  }, [ensureConversation, isLoading, checkBackend]);
 
   const value = {
     // State
@@ -398,6 +409,7 @@ export function ChatProvider({ children }) {
     isLoading,
     error,
     backendStatus,
+    retryBackendCheck: checkBackend,
 
     // Pipeline
     pipelineNodes,
