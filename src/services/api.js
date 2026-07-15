@@ -3,13 +3,18 @@
  * Supports SSE streaming for real-time pipeline progress.
  */
 
-// Leave VITE_API_BASE_URL empty so requests use same-origin relative paths
-// (/api, /health). Those are forwarded by the server-side proxy — the Vercel
-// Edge Function in production (api/proxy.js) or the Vite dev proxy locally —
-// which injects the Cloudflare Access headers server-side. Keeping the CF
-// service-token secret out of the browser bundle is the whole point.
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
-const SHOULD_SKIP_NGROK_WARNING = API_BASE.includes('ngrok');
+// The browser ALWAYS talks to same-origin relative paths (/api, /health). A
+// server-side proxy — the Vercel Edge Function in production (api/proxy.js) or
+// the Vite dev proxy locally — forwards them to the backend and injects the
+// Cloudflare Access headers server-side, keeping the CF service token out of
+// the browser bundle.
+//
+// We intentionally do NOT use VITE_API_BASE_URL as the request base: pointing
+// the browser straight at the CF-protected backend can never work (the service
+// token must stay server-side → the backend 302s to the CF login page), and a
+// stray VITE_API_BASE_URL set in Vercel would silently reintroduce that bug.
+const API_BASE = '';
+const SHOULD_SKIP_NGROK_WARNING = (import.meta.env.VITE_API_BASE_URL || '').includes('ngrok');
 
 function withAuthHeaders(headers = {}) {
   const merged = { ...headers };
