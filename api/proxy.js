@@ -52,6 +52,22 @@ export default async function handler(req) {
 
   const upstreamResp = await fetch(upstream, init);
 
+  // A 3xx here almost always means Cloudflare Access rejected the service
+  // token (missing/expired CF_ACCESS_CLIENT_ID/SECRET) and is redirecting to
+  // its login page on a different origin. Forwarding that redirect as-is
+  // makes the browser try to follow it cross-origin, which surfaces as a
+  // confusing CORS error instead of the real cause. Fail loudly instead.
+  if (upstreamResp.status >= 300 && upstreamResp.status < 400) {
+    const location = upstreamResp.headers.get('location') || '';
+    return new Response(
+      JSON.stringify({
+        error: 'Upstream redirected instead of responding — Cloudflare Access likely rejected the service token.',
+        location,
+      }),
+      { status: 502, headers: { 'content-type': 'application/json' } }
+    );
+  }
+
   // Strip hop-by-hop / length headers so the streamed body isn't misframed.
   const respHeaders = new Headers(upstreamResp.headers);
   respHeaders.delete('content-encoding');
