@@ -6,15 +6,22 @@
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 const SHOULD_SKIP_NGROK_WARNING = API_BASE.includes('ngrok');
 
-function withNgrokHeaders(headers = {}) {
-  if (!SHOULD_SKIP_NGROK_WARNING) {
-    return headers;
+const CF_ACCESS_CLIENT_ID = import.meta.env.VITE_CF_ACCESS_CLIENT_ID || '';
+const CF_ACCESS_CLIENT_SECRET = import.meta.env.VITE_CF_ACCESS_CLIENT_SECRET || '';
+
+function withAuthHeaders(headers = {}) {
+  const merged = { ...headers };
+
+  if (SHOULD_SKIP_NGROK_WARNING) {
+    merged['ngrok-skip-browser-warning'] = 'true';
   }
 
-  return {
-    ...headers,
-    'ngrok-skip-browser-warning': 'true',
-  };
+  if (CF_ACCESS_CLIENT_ID && CF_ACCESS_CLIENT_SECRET) {
+    merged['CF-Access-Client-Id'] = CF_ACCESS_CLIENT_ID;
+    merged['CF-Access-Client-Secret'] = CF_ACCESS_CLIENT_SECRET;
+  }
+
+  return merged;
 }
 
 /**
@@ -24,7 +31,7 @@ function withNgrokHeaders(headers = {}) {
 export async function checkHealth() {
   try {
     const res = await fetch(`${API_BASE}/health/`, {
-      headers: withNgrokHeaders(),
+      headers: withAuthHeaders(),
     });
     if (!res.ok) throw new Error(`Status ${res.status}`);
     const data = await res.json();
@@ -52,7 +59,7 @@ export async function streamAnalysis(query, threadId, history, callbacks) {
 
   const res = await fetch(`${API_BASE}/api/v1/analyze/stream`, {
     method: 'POST',
-    headers: withNgrokHeaders({ 'Content-Type': 'application/json' }),
+    headers: withAuthHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({ query, thread_id: threadId, messages: history }),
   });
 
@@ -126,7 +133,7 @@ export async function streamAnalysis(query, threadId, history, callbacks) {
 export async function analyzeQuery(query, threadId) {
   const res = await fetch(`${API_BASE}/api/v1/analyze`, {
     method: 'POST',
-    headers: withNgrokHeaders({ 'Content-Type': 'application/json' }),
+    headers: withAuthHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({ query, thread_id: threadId }),
   });
 
@@ -157,7 +164,7 @@ export async function ingestFiles(files, sessionId) {
 
   const res = await fetch(`${API_BASE}/api/v1/ingest`, {
     method: 'POST',
-    headers: withNgrokHeaders(),
+    headers: withAuthHeaders(),
     body: formData,
   });
 
@@ -182,7 +189,7 @@ export async function uploadFile(file, threadId) {
 
   const res = await fetch(`${API_BASE}/api/v1/upload`, {
     method: 'POST',
-    headers: withNgrokHeaders(),
+    headers: withAuthHeaders(),
     body: formData,
   });
 
@@ -202,7 +209,7 @@ export async function uploadFile(file, threadId) {
 export async function listUploads(threadId) {
   const params = new URLSearchParams({ thread_id: threadId });
   const res = await fetch(`${API_BASE}/api/v1/uploads?${params.toString()}`, {
-    headers: withNgrokHeaders(),
+    headers: withAuthHeaders(),
   });
   if (!res.ok) throw new Error(`Failed to list uploads: HTTP ${res.status}`);
   return res.json();
@@ -218,7 +225,7 @@ export async function deleteUpload(uploadId, threadId) {
   const params = new URLSearchParams({ thread_id: threadId });
   const res = await fetch(`${API_BASE}/api/v1/uploads/${uploadId}?${params.toString()}`, {
     method: 'DELETE',
-    headers: withNgrokHeaders(),
+    headers: withAuthHeaders(),
   });
   if (!res.ok) throw new Error(`Delete failed: HTTP ${res.status}`);
   return res.json();
