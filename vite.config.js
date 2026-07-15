@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const backendUrl = env.API_PROXY_TARGET || env.VITE_API_BASE_URL || 'http://localhost:8000'
-  const ngrokHost = 'scheme-curator-modulator.ngrok-free.dev'
+  const ngrokHost = 'omni-agent.nuark.ai'
   const allowedDevOrigins = [ngrokHost, "http://localhost:8000"]
   const proxyHeaders = {
     'ngrok-skip-browser-warning': 'true',
